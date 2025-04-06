@@ -48,20 +48,35 @@
           text-align: center;
         }
 
+         :root {
+          --black-dither: repeating-conic-gradient(
+            from 0deg,
+            black 0deg 1deg,
+            white 1deg 2deg
+          );
+          }
+
         article.ec-event {
-          font-size: 24px;
+          font-size: 28px;
           display: block;
           border: 1px solid black;
           box-shadow: none;
+          background-image: var(--black-dither);
+          background-size: 2px 2px;
         }
 
 	body .ec-title {
 	  font-size: 48px;
 	}
 
+    body .ec-events {
+        margin: 0 1px 0 1px;
+    }
+
 	body .ec-header .ec-day{
 	  font-size: 48px;
 	  line-height: 100%;
+	  padding: 1px;
 	}
 
 	body .ec-day-head {
@@ -135,7 +150,7 @@
         return new Date(clonedDayDate.setHours(timeDate.getHours(), timeDate.getMinutes(), timeDate.getSeconds(), timeDate.getMilliseconds()));
     }
 
-    function asEvent(event, overrideStart) {
+    function asEvent(calendarName, event, overrideStart) {
 
         if(overrideStart) {
               return {
@@ -145,7 +160,8 @@
                     id: event.uid + overrideStart,
                     backgroundColor: "#ffffff",
                     textColor: "#000000",
-                    allDay: event.startDate.isDate
+                    allDay: event.startDate.isDate,
+                    className: "calendar-" + calendarName
                   }
         } else {
                 return {
@@ -155,13 +171,14 @@
                     id: event.uid,
                     backgroundColor: "#ffffff",
                     textColor: "#000000",
-                    allDay: event.startDate.isDate
+                    allDay: event.startDate.isDate,
+                    className: "calendar-" + calendarName
                   }
         }
     }
 
 
-    function selectEventsBetween(start, end, events) {
+    function selectEventsBetween(start, end, events, calendarName) {
 
       let rv = [];
 
@@ -175,12 +192,12 @@
               let next = expand.next();
               while (next && next.toJSDate() <= end) {
                 if (next.toJSDate() >= start) {
-                  rv.push(asEvent(event, next));
+                  rv.push(asEvent(calendarName, event, next));
                 }
                 next = expand.next();
               }
           } else {
-              rv.push(asEvent(event));
+              rv.push(asEvent(calendarName, event));
           }
       }
       return rv;
@@ -201,12 +218,12 @@
 
     function getEventsForDateRange(dateStart, dateEnd) {
       const icalUrls = [
-        'http://192.168.11.190/calendar1.ics',
-        'http://192.168.11.190/calendar2.ics',
-        'http://192.168.11.190/calendar3.ics']; // hardcoded URLs
+        ['family-event','http://192.168.11.190/calendar1.ics'],
+        ['family-holiday','http://192.168.11.190/calendar2.ics'],
+        ['school-holiday','http://192.168.11.190/calendar3.ics']]; // hardcoded URLs
 
       return Promise.all(icalUrls.flatMap(icalUrl =>
-          fetchAndParseIcal(icalUrl).then(events => selectEventsBetween(dateStart, dateEnd, events))
+          fetchAndParseIcal(icalUrl[1]).then(events => selectEventsBetween(dateStart, dateEnd, events, icalUrl[0]))
       )).then(events => events.flat())
       .catch(error => console.error('Error fetching or parsing iCal data:', error));
     }
