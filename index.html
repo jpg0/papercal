@@ -49,11 +49,27 @@
         }
 
          :root {
-          --black-dither: repeating-conic-gradient(
-            from 0deg,
-            black 0deg 1deg,
-            white 1deg 2deg
-          );
+              --black-50-dither: repeating-conic-gradient(
+                from 0deg,
+                black 0deg 1deg,
+                white 1deg 2deg
+              );
+              --black-25-dither: repeating-conic-gradient(
+                from 0deg,
+                black 0deg 90deg,
+                white 90deg 360deg
+              );
+              --red-50-dither: repeating-conic-gradient(
+                from 0deg,
+                red 0deg 1deg,
+                white 1deg 2deg
+              );
+              --red-25-dither: repeating-conic-gradient(
+                from 0deg,
+                red 0deg 90deg,
+                white 90deg 360deg
+              );
+
           }
 
         article.ec-event {
@@ -61,8 +77,16 @@
           display: block;
           border: 1px solid black;
           box-shadow: none;
-          background-image: var(--black-dither);
-          background-size: 2px 2px;
+        }
+
+        article.calendar-family-event {
+            background-image: var(--black-25-dither);
+            background-size: 2px 2px;
+        }
+
+        article.calendar-family-holiday {
+            background-image: var(--red-25-dither);
+            background-size: 2px 2px;
         }
 
 	body .ec-title {
@@ -134,6 +158,66 @@
             padding-right: 1px;
             width: 48px;
         }
+
+        #chores {
+            padding: 6px 3px;
+        }
+
+        .chore-table {
+          background-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000000%22%20height%3D%22200px%22%20width%3D%22200px%22%20version%3D%221.1%22%20id%3D%22Capa_1%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20viewBox%3D%220%200%2058%2058%22%20xml%3Aspace%3D%22preserve%22%3E%3Cg%20id%3D%22SVGRepo_bgCarrier%22%20stroke-width%3D%220%22%3E%3C%2Fg%3E%3Cg%20id%3D%22SVGRepo_tracerCarrier%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fg%3E%3Cg%20id%3D%22SVGRepo_iconCarrier%22%3E%20%3Cg%3E%20%3Cpath%20d%3D%22M57.832%2C26.926l-8-12c-0.186-0.278-0.498-0.445-0.832-0.445H9c-0.335%2C0-0.646%2C0.167-0.832%2C0.445l-8%2C12%20c-0.205%2C0.307-0.224%2C0.701-0.05%2C1.026C0.292%2C28.278%2C0.631%2C28.481%2C1%2C28.481h6v15.038h2V28.481h5v6h2v-6h27v6h2v-6h5v15.038h2V28.481%20h5c0.369%2C0%2C0.708-0.203%2C0.882-0.528C58.056%2C27.627%2C58.037%2C27.233%2C57.832%2C26.926z%20M2.869%2C26.481l6.666-10h38.93l6.667%2C10H2.869z%22%3E%3C%2Fpath%3E%20%3C%2Fg%3E%20%3C%2Fg%3E%3C%2Fsvg%3E");
+          background-size: contain; /* Or cover, depending on your needs */
+          background-repeat: no-repeat;
+                      padding: 0 2px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+
+        .chore-bin {
+          background-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2028%2028%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20id%3D%22SVGRepo_bgCarrier%22%20stroke-width%3D%220%22%3E%3C%2Fg%3E%3Cg%20id%3D%22SVGRepo_tracerCarrier%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fg%3E%3Cg%20id%3D%22SVGRepo_iconCarrier%22%3E%3Cpath%20d%3D%22M11.8489%2022.6922C11.5862%2022.7201%2011.3509%2022.5283%2011.3232%2022.2638L10.4668%2014.0733C10.4392%2013.8089%2010.6297%2013.5719%2010.8924%2013.5441L11.368%2013.4937C11.6307%2013.4659%2011.8661%2013.6577%2011.8937%2013.9221L12.7501%2022.1126C12.7778%2022.3771%2012.5873%2022.614%2012.3246%2022.6418L11.8489%2022.6922Z%22%20fill%3D%22%23000000%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M16.1533%2022.6418C15.8906%2022.614%2015.7001%2022.3771%2015.7277%2022.1126L16.5841%2013.9221C16.6118%2013.6577%2016.8471%2013.4659%2017.1098%2013.4937L17.5854%2013.5441C17.8481%2013.5719%2018.0387%2013.8089%2018.011%2014.0733L17.1546%2022.2638C17.127%2022.5283%2016.8916%2022.7201%2016.6289%2022.6922L16.1533%2022.6418Z%22%20fill%3D%22%23000000%22%3E%3C%2Fpath%3E%3Cpath%20clip-rule%3D%22evenodd%22%20d%3D%22M11.9233%201C11.3494%201%2010.8306%201.34435%2010.6045%201.87545L9.54244%204.37037H4.91304C3.8565%204.37037%203%205.23264%203%206.2963V8.7037C3%209.68523%203.72934%2010.4953%204.67218%2010.6145L7.62934%2026.2259C7.71876%2026.676%208.11133%2027%208.56729%2027H20.3507C20.8242%2027%2021.2264%2026.6513%2021.2966%2026.1799L23.4467%2010.5956C24.3313%2010.4262%2025%209.64356%2025%208.7037V6.2963C25%205.23264%2024.1435%204.37037%2023.087%204.37037H18.4561L17.394%201.87545C17.1679%201.34435%2016.6492%201%2016.0752%201H11.9233ZM16.3747%204.37037L16.0083%203.50956C15.8576%203.15549%2015.5117%202.92593%2015.1291%202.92593H12.8694C12.4868%202.92593%2012.141%203.15549%2011.9902%203.50956L11.6238%204.37037H16.3747ZM21.4694%2011.0516C21.5028%2010.8108%2021.3154%2010.5961%2021.0723%2010.5967L7.1143%2010.6285C6.86411%2010.6291%206.67585%2010.8566%206.72212%2011.1025L9.19806%2024.259C9.28701%2024.7317%209.69985%2025.0741%2010.1808%2025.0741H18.6559C19.1552%2025.0741%2019.578%2024.7058%2019.6465%2024.2113L21.4694%2011.0516ZM22.1304%208.7037C22.6587%208.7037%2023.087%208.27257%2023.087%207.74074V7.25926C23.087%206.72743%2022.6587%206.2963%2022.1304%206.2963H5.86957C5.34129%206.2963%204.91304%206.72743%204.91304%207.25926V7.74074C4.91304%208.27257%205.34129%208.7037%205.86956%208.7037H22.1304Z%22%20fill%3D%22%23000000%22%20fill-rule%3D%22evenodd%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+          background-size: contain; /* Or cover, depending on your needs */
+          background-repeat: no-repeat;
+                      padding: 0 2px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+
+        .chore-dishwasher {
+          background-image: url("data:image/svg+xml,%3Csvg%20fill%3D%22%23000000%22%20viewBox%3D%220%200%2050%2050%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%3E%3Cg%20id%3D%22SVGRepo_bgCarrier%22%20stroke-width%3D%220%22%3E%3C%2Fg%3E%3Cg%20id%3D%22SVGRepo_tracerCarrier%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3C%2Fg%3E%3Cg%20id%3D%22SVGRepo_iconCarrier%22%3E%3Cpath%20d%3D%22M5.8125%203C5.335938%203.089844%204.992188%203.511719%205%204L5%2046C5%2046.550781%205.449219%2047%206%2047L44%2047C44.550781%2047%2045%2046.550781%2045%2046L45%204C45%203.449219%2044.550781%203%2044%203L6%203C5.96875%203%205.9375%203%205.90625%203C5.875%203%205.84375%203%205.8125%203%20Z%20M%207%205L43%205L43%2013L7%2013%20Z%20M%2027%207C25.894531%207%2025%207.894531%2025%209C25%2010.105469%2025.894531%2011%2027%2011C28.105469%2011%2029%2010.105469%2029%209C29%207.894531%2028.105469%207%2027%207%20Z%20M%2033%207C31.894531%207%2031%207.894531%2031%209C31%2010.105469%2031.894531%2011%2033%2011C34.105469%2011%2035%2010.105469%2035%209C35%207.894531%2034.105469%207%2033%207%20Z%20M%2039%207C37.894531%207%2037%207.894531%2037%209C37%2010.105469%2037.894531%2011%2039%2011C40.105469%2011%2041%2010.105469%2041%209C41%207.894531%2040.105469%207%2039%207%20Z%20M%207%2015L43%2015L43%2045L7%2045%20Z%20M%2027%2019L27%2041L29%2041L29%2038.90625C31.269531%2038.4375%2033%2036.402344%2033%2034L33%2026C33%2023.597656%2031.269531%2021.5625%2029%2021.09375L29%2019%20Z%20M%2035%2019L35%2041L37%2041L37%2038.90625C39.269531%2038.4375%2041%2036.402344%2041%2034L41%2026C41%2023.597656%2039.269531%2021.5625%2037%2021.09375L37%2019%20Z%20M%2029%2023.40625C30.109375%2023.847656%2031%2024.734375%2031%2026L31%2034C31%2035.265625%2030.109375%2036.152344%2029%2036.59375%20Z%20M%2037%2023.40625C38.109375%2023.847656%2039%2024.734375%2039%2026L39%2034C39%2035.265625%2038.109375%2036.152344%2037%2036.59375%20Z%20M%209%2024L9%2029C9%2032.507813%2011.621094%2035.417969%2015%2035.90625L15%2039L12%2039L12%2041L20%2041L20%2039L17%2039L17%2035.90625C20.378906%2035.417969%2023%2032.507813%2023%2029L23%2024%20Z%20M%2011%2026L21%2026L21%2029C21%2031.753906%2018.753906%2034%2016%2034C13.246094%2034%2011%2031.753906%2011%2029Z%22%3E%3C%2Fpath%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+          background-size: contain; /* Or cover, depending on your needs */
+          background-repeat: no-repeat;
+            padding: 0 2px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+
+        .person-box {
+            width:200px;
+            display: inline-block;
+            //border: 1px solid black;
+            border-radius: 3px;
+            padding: 6px;
+            margin: 6px;
+            font-size: 28px;
+        }
+
+        .felix {
+                    background-image: var(--black-25-dither);
+            background-size: 2px 2px;
+        }
+
+        .indi {
+                    background-image: var(--black-50-dither);
+            background-size: 2px 2px;
+        }
+
+        .lyra {
+                    background-image: var(--red-25-dither);
+            background-size: 2px 2px;
+        }
+
     </style>
     <script src="ical.es5.cjs"></script>
     <link href="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.12.0/event-calendar.min.css" rel="stylesheet">
@@ -141,7 +225,14 @@
 </head>
 <body>
 
-<div id="ec"></div>
+<div>
+    <div id="ec"></div>
+    <div id="chores" style="text-align:center">
+        <div class="person-box felix"><span class="chore-table"></span>Felix</div>
+        <div class="person-box indi"><span class="chore-bin"></span>Indi</div>
+        <div class="person-box lyra"><span class="chore-dishwasher"></span>Lyra</div>
+    </div>
+</div>
 
 <script>
 
