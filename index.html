@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet">
     <title>No Anti-Aliasing Calendar (2 Weeks - Real Dates)</title>
     <style>
         body {
@@ -46,9 +47,12 @@
           font-weight: normal;
           text-align: center;
         }
+
         article.ec-event {
           font-size: 24px;
           display: block;
+          border: 1px solid black;
+          box-shadow: none;
         }
 
 	body .ec-title {
@@ -115,14 +119,9 @@
             padding-right: 1px;
             width: 48px;
         }
- //no borders for events
-        div.ec .ec-event {
-        box-shadow: none;
-  border: none; /* Or border: 0; */
-}
     </style>
     <script src="ical.es5.cjs"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.12.0/event-calendar.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.12.0/event-calendar.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.12.0/event-calendar.min.js"></script>
 </head>
 <body>
@@ -131,58 +130,64 @@
 
 <script>
 
-    let icalDataPromise = null;
-
-    function setTimeFromAnotherDate(targetDate, sourceDate) {
-        const clonedTarget = new Date(targetDate); // Creates a copy
-        return new Date(clonedTarget.setHours(sourceDate.getHours(), sourceDate.getMinutes(), sourceDate.getSeconds(), sourceDate.getMilliseconds()));
+    function setTimeFromAnotherDate(dayDate, timeDate) {
+        const clonedDayDate = new Date(dayDate); // Creates a copy
+        return new Date(clonedDayDate.setHours(timeDate.getHours(), timeDate.getMinutes(), timeDate.getSeconds(), timeDate.getMilliseconds()));
     }
 
-    function asEvent(event, overrideStartTime) {
-        if(overrideStartTime) {
+    function asEvent(event, overrideStart) {
+
+        if(overrideStart) {
               return {
-                    start: overrideStartTime.toJSDate(),
-                    end:  setTimeFromAnotherDate(overrideStartTime.toJSDate(), event.endDate.toJSDate()),
+                    start: overrideStart.toJSDate(),
+                    end:  setTimeFromAnotherDate(overrideStart.toJSDate(), event.endDate.toJSDate()),
                     title: event.summary,
-                    id: event.uid + overrideStartTime,
+                    id: event.uid + overrideStart,
                     backgroundColor: "#ffffff",
-                    textColor: "#000000"
+                    textColor: "#000000",
+                    allDay: event.startDate.isDate
                   }
         } else {
                 return {
-                    start: event.toJSDate(),
+                    start: event.startDate.toJSDate(),
                     end:  event.endDate.toJSDate(),
                     title: event.summary,
-                    id: event.uid
+                    id: event.uid,
+                    backgroundColor: "#ffffff",
+                    textColor: "#000000",
+                    allDay: event.startDate.isDate
                   }
         }
     }
+
 
     function selectEventsBetween(start, end, events) {
 
       let rv = [];
 
       for(event of events) {
+        if(event.isRecurring()) {
+              let expand = new ICAL.RecurExpansion({
+                component: event.component,
+                dtstart: event.startDate
+              });
 
-          let expand = new ICAL.RecurExpansion({
-            component: event.component,
-            dtstart: event.startDate
-          });
-
-          let next = expand.next();
-          while (next && next.toJSDate() <= end) {
-            if (next.toJSDate() >= start) {
-              rv.push(asEvent(event, next));
-            }
-            next = expand.next();
+              let next = expand.next();
+              while (next && next.toJSDate() <= end) {
+                if (next.toJSDate() >= start) {
+                  rv.push(asEvent(event, next));
+                }
+                next = expand.next();
+              }
+          } else {
+              rv.push(asEvent(event));
           }
       }
       return rv;
     }
 
 
-    function fetchAndParseIcal() {
-      const icalUrl = 'http://192.168.11.190/calendar.ics'; // hardcoded URL
+    function fetchAndParseIcal(icalUrl) {
       return fetch(icalUrl)
         .then(response => response.text())
         .then(icalDataText => {
@@ -195,13 +200,15 @@
     }
 
     function getEventsForDateRange(dateStart, dateEnd) {
-      if (!icalDataPromise) {
-        icalDataPromise = fetchAndParseIcal();
-      }
-      return icalDataPromise.then(events => {
-        const currentEvents = selectEventsBetween(dateStart, dateEnd, events);
-        return currentEvents;
-      });
+      const icalUrls = [
+        'http://192.168.11.190/calendar1.ics',
+        'http://192.168.11.190/calendar2.ics',
+        'http://192.168.11.190/calendar3.ics']; // hardcoded URLs
+
+      return Promise.all(icalUrls.flatMap(icalUrl =>
+          fetchAndParseIcal(icalUrl).then(events => selectEventsBetween(dateStart, dateEnd, events))
+      )).then(events => events.flat())
+      .catch(error => console.error('Error fetching or parsing iCal data:', error));
     }
 
     let ec = new EventCalendar(document.getElementById('ec'), {
@@ -211,7 +218,7 @@
     }],
     duration: {weeks: 2},
     firstDay: 1,
-    headerToolbar: {start: 'title', center: '', end: ''},
+    headerToolbar: {start: '', center: 'title', end: ''},
     width: "1304px"
 });
 </script>
