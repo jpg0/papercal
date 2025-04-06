@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+    <title>No Anti-Aliasing Calendar (2 Weeks - Real Dates)</title>
+    <style>
+        body {
+          margin: 0;
+          background-color: white;
+//          font-family: monospace;
+  font-family: "IBM Plex Sans Condensed", sans-serif;
+
+          image-rendering: pixelated;
+          text-rendering: optimizeSpeed;
+          -webkit-font-smoothing: none;
+          -moz-osx-font-smoothing: grayscale;
+          text-shadow: none;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 984px;
+        }
+        table {
+          border-collapse: collapse;
+          width: 1304px;
+          height: auto;
+        }
+        th, td {
+          border: 1px solid black;
+          padding: 10px;
+          text-align: left;
+          font-size: 48px;
+          line-height: 1.3;
+          color: black;
+          background-color: white;
+          width: calc(100% / 7);
+          box-sizing: border-box;
+
+        }
+        td {
+          vertical-align: top;
+        }
+        th {
+          font-weight: normal;
+          text-align: center;
+        }
+        article.ec-event {
+          font-size: 24px;
+          display: block;
+        }
+
+	body .ec-title {
+	  font-size: 48px;
+	}
+
+	body .ec-header .ec-day{
+	  font-size: 48px;
+	  line-height: 100%;
+	}
+
+	body .ec-day-head {
+	  font-size: 48px;
+	}
+
+.not-current-month {
+  -webkit-text-stroke: 1px #000;
+  -webkit-text-stroke-color: #000;
+  color: #fff;
+}
+
+.ec-day-grid div.ec-event-body {
+    flex-direction: column;
+}
+
+
+        .current-month {
+  -webkit-text-stroke: 1px #000;
+  -webkit-text-stroke-color: #000;
+  color: #000;
+}
+
+.cell-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cell-content span.date {
+  margin-top: 0;
+  margin-bottom: auto;
+}
+
+        #ec {
+            width: 1304px;
+        }
+
+
+        div.ec {
+          --ec-l-300: 00%;
+          --ec-l-500: 00%;
+          --ec-l-600: 00%;
+          --ec-l-700: 00%;
+
+
+
+        }
+
+        .ec-today .ec-day-head time {
+            border-radius: 25%;
+            background-color: red;
+            padding-left: 1px;
+            padding-right: 1px;
+        }
+ //no borders for events
+        div.ec .ec-event {
+        box-shadow: none;
+  border: none; /* Or border: 0; */
+}
+    </style>
+    <script src="ical.es5.cjs"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.12.0/event-calendar.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@event-calendar/build@3.12.0/event-calendar.min.js"></script>
+</head>
+<body>
+
+<div id="ec"></div>
+
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th colspan="7" id="month-name">Month Name</th>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <th>Sunday</th>-->
+<!--        <th>Monday</th>-->
+<!--        <th>Tuesday</th>-->
+<!--        <th>Wednesday</th>-->
+<!--        <th>Thursday</th>-->
+<!--        <th>Friday</th>-->
+<!--        <th>Saturday</th>-->
+<!--    </tr>-->
+<!--    <tbody>-->
+<!--    <tr>-->
+<!--        <td id="day-1">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-1-date"></span>-->
+<!--                <div id="day-1-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-2">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-2-date"></span>-->
+<!--                <div id="day-2-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-3">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-3-date"></span>-->
+<!--                <div id="day-3-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-4">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-4-date"></span>-->
+<!--                <div id="day-4-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-5">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-5-date"></span>-->
+<!--                <div id="day-5-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-6">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-6-date"></span>-->
+<!--                <div id="day-6-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-7">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-7-date"></span>-->
+<!--                <div id="day-7-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    <tr>-->
+<!--        <td id="day-8">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-8-date"></span>-->
+<!--                <div id="day-8-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-9">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-9-date"></span>-->
+<!--                <div id="day-9-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-10">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-10-date"></span>-->
+<!--                <div id="day-10-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-11">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-11-date"></span>-->
+<!--                <div id="day-11-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-12">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-12-date"></span>-->
+<!--                <div id="day-12-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-13">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-13-date"></span>-->
+<!--                <div id="day-13-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td id="day-14">-->
+<!--            <div class="cell-content">-->
+<!--                <span class="date" id="day-14-date"></span>-->
+<!--                <div id="day-14-events"></div>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<script>
+
+    let icalDataPromise = null;
+
+    function setTimeFromAnotherDate(targetDate, sourceDate) {
+        const clonedTarget = new Date(targetDate); // Creates a copy
+        return new Date(clonedTarget.setHours(sourceDate.getHours(), sourceDate.getMinutes(), sourceDate.getSeconds(), sourceDate.getMilliseconds()));
+    }
+
+    function asEvent(event, overrideStartTime) {
+        if(overrideStartTime) {
+              return {
+                    start: overrideStartTime.toJSDate(),
+                    end:  setTimeFromAnotherDate(overrideStartTime.toJSDate(), event.endDate.toJSDate()),
+                    title: event.summary,
+                    id: event.uid + overrideStartTime,
+                    backgroundColor: "#ffffff",
+                    textColor: "#000000"
+                  }
+        } else {
+                return {
+                    start: event.toJSDate(),
+                    end:  event.endDate.toJSDate(),
+                    title: event.summary,
+                    id: event.uid
+                  }
+        }
+    }
+
+    function selectEventsBetween(start, end, events) {
+
+      let rv = [];
+
+      for(event of events) {
+
+          let expand = new ICAL.RecurExpansion({
+            component: event.component,
+            dtstart: event.startDate
+          });
+
+          let next = expand.next();
+          while (next && next.toJSDate() <= end) {
+            if (next.toJSDate() >= start) {
+              rv.push(asEvent(event, next));
+            }
+            next = expand.next();
+          }
+      }
+      return rv;
+    }
+
+
+    function fetchAndParseIcal() {
+      const icalUrl = 'http://192.168.11.190/calendar.ics'; // hardcoded URL
+      return fetch(icalUrl)
+        .then(response => response.text())
+        .then(icalDataText => {
+          let jcalData = ICAL.parse(icalDataText);
+          const icalComp = new ICAL.Component(jcalData);
+          const events = icalComp.getAllSubcomponents("vevent").map(vevent => new ICAL.Event(vevent));
+            return events;
+        })
+        .catch(error => console.error('Error fetching or parsing iCal data:', error));
+    }
+
+    function getEventsForDateRange(dateStart, dateEnd) {
+      if (!icalDataPromise) {
+        icalDataPromise = fetchAndParseIcal();
+      }
+      return icalDataPromise.then(events => {
+        const currentEvents = selectEventsBetween(dateStart, dateEnd, events);
+        return currentEvents;
+      });
+    }
+
+    let ec = new EventCalendar(document.getElementById('ec'), {
+    view: 'dayGridMonth',
+    eventSources: [{
+        events: function(fetchInfo, successCallback, failureCallback) { return getEventsForDateRange(fetchInfo.start, fetchInfo.end); }
+    }],
+    duration: {weeks: 2},
+    firstDay: 1,
+    headerToolbar: {start: 'title', center: '', end: ''},
+    width: "1304px"
+});
+</script>
+
+<!--script>
+
+ function dateToDay(date) {
+    return date?.toISOString()?.split('T')?.[0];
+}
+
+ document.addEventListener('DOMContentLoaded', function() {
+    const monthNameElement = document.getElementById('month-name');
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 for Sunday, 1 for Monday, etc.
+    const currentDate = new Date(today); // Create a copy to manipulate
+
+    // Calculate the start date of the first week (Sunday)
+    const daysSinceSunday = dayOfWeek;
+    currentDate.setDate(today.getDate() - daysSinceSunday);
+
+    // Set the month name
+    const month = currentDate.getMonth(); // Month is 0-indexed
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    monthNameElement.textContent = monthNames[month];
+
+    // Populate the day content
+    for (let i = 1; i <= 14; i++) {
+
+      let date = new Date(currentDate); // Create a new date object
+      date.setDate(date.getDate() + i - 1); // Calculate the date
+      let day = dateToDay(date);
+
+      getEventsForDate(day).then(events => {
+
+          let dateElement = document.getElementById(`day-${i}-date`);
+          let eventsElement = document.getElementById(`day-${i}-events`);
+
+          dateElement.textContent = date.getDate();
+
+          if (date.getMonth() !== today.getMonth()) {
+            dateElement.classList.add('not-current-month');
+          } else {
+            dateElement.classList.add('current-month');
+          }
+
+          eventsElement.innerHTML = '';
+
+          events.forEach(event => {
+            let eventElement = document.createElement('span');
+            eventElement.className = 'event';
+            eventElement.textContent = event.summary;
+            eventsElement.appendChild(eventElement);
+          });
+      });
+    }
+  });
+
+let icalDataPromise = null;
+
+
+
+function fetchAndParseIcal() {
+  const icalUrl = 'http://192.168.11.190/calendar.ics'; // hardcoded URL
+  return fetch(icalUrl)
+    .then(response => response.text())
+    .then(icalDataText => {
+      let jcalData = ICAL.parse(icalDataText);
+      const icalComp = new ICAL.Component(jcalData);
+      const events = icalComp.getAllSubcomponents("vevent").map(vevent => new ICAL.Event(vevent));
+        return events;
+    })
+    .catch(error => console.error('Error fetching or parsing iCal data:', error));
+}
+
+function occursOnDate(day, event) {
+
+    if(dateToDay(event.startDate.toJSDate()) === day) {
+        return true;
+    }
+
+    let expand = new ICAL.RecurExpansion({
+      component: event.component,
+      dtstart: event.startDate
+    });
+
+    let next = dateToDay(expand.next()?.toJSDate());
+
+    while (next != null && next <= day) {
+      if(next === day) {
+        return true;
+      }
+      next = dateToDay(expand.next()?.toJSDate());
+    }
+
+    return false;
+}
+
+function getEventsForDate(date) {
+  if (!icalDataPromise) {
+    icalDataPromise = fetchAndParseIcal();
+  }
+  return icalDataPromise.then(events => {
+
+    const currentEvents = events.filter(event => occursOnDate(date, event));
+
+    return currentEvents;
+  });
+}
+</script-->
+
+</body>
+</html>
